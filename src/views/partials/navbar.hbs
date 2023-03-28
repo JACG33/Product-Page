@@ -1,0 +1,26 @@
+<nav class="navbar">
+  <h1><a href="/" class="no-link">WEB</a></h1>
+  <div class="wrapper__search">
+    <input class="input__search" type="search" name="" id="searchInput" />
+    <button class="btn__search" type="button" data-btn="search">Buscar</button>
+  </div>
+  <ul class="navbar__items">
+    {{#if loged}}
+      <li><a href="/user" class="btn btn__1">Perfil</a></li>
+    {{/if}}
+    <li><a href="/products" class="btn btn__1">Productos</a></li>
+    {{#if loged}}
+      <li class="navbar__item"><a
+          href="/auth/logut"
+          class="btn btn__logout"
+        >Cerrar Sesion</a></li>
+    {{/if}}
+
+    {{#unless loged}}
+      <li><a href="/login" class="btn btn__send">Login</a></li>
+      <li><a href="/register" class="btn btn__border">Registrate</a></li>
+    {{/unless}}
+
+  </ul>
+
+</nav>

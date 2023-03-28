@@ -1,0 +1,32 @@
+<section class="container h-100minvh d-flex flex-aling-center flex-jus-center">
+  <form method="post">
+    <div class="card">
+      <div class="card__step">
+        <span>Register</span>
+      </div>
+      <div class="card__data">
+        <label class="card__label" for="">Nombre y Apellido</label>
+        <input
+          class="card__input"
+          type="text"
+          placeholder="Nombre y Apellido"
+          id="fullname"
+        />
+        <label class="card__label" for="">Usuario</label>
+        <input class="card__input" type="text" placeholder="Usuario" id="user"/>
+        <label class="card__label" for="">Contraseña</label>
+        <input class="card__input" type="text" placeholder="12345678" id="password"/>
+      </div>
+      <div class="card__btn flex-jus-end">
+        <button
+          class="btn btn__send"
+          type="button"
+          id="register"
+        >Registrar</button>
+      </div>
+      <small>¿Estas Registrado? <a href="/login">Inicia Sesion</a></small>
+    </div>
+  </form>
+</section>
+
+<script src="/js/auth/register.js" type="module"></script>
