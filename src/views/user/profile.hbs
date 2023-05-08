@@ -1,5 +1,11 @@
 <section class="container profile">
   <div class="profile__cont">
+    <div class="edit__profile__cont">
+      <button type="button" class="btn btn-edit" data-btn="editProfile"><i
+          data-btn="editProfile"
+          class="fa-solid fa-pencil"
+        ></i></button>
+    </div>
     <div class="profile__cont__img">
       <img
         src="../img/jacg.png"
@@ -8,10 +14,13 @@
         width="100"
         height="100"
       />
-      <span class="profile__name" id="userNameProfile"></span>
+      <span
+        class="profile__name"
+        id="userNameProfile"
+      >{{{userInfo.nombreApellido}}}</span>
     </div>
     <div class="profile__cont__descrip">
-      <p class="profile__descrip">
+      <p class="profile__descrip" id="userDescripProfile">
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio facilis
         minima natus, necessitatibus quae.
       </p>
@@ -20,28 +29,29 @@
   </div>
   <div class="products products__user" id="productList">
     {{#each userProducs}}
-      <div class="product__item">
+      <div class="product__item" data-card="{{{@index}}}">
+        <input type="hidden" value="{{{dataValues.descrip}}}" />
         <div class="product__info">
-          <span class="product__name">{{{name}}}</span>
-          <p class="product__descrip">{{{descrip}}}</p>
+          <span class="product__name">{{{dataValues.name}}}</span>
+          <p class="product__descrip">{{{dataValues.descripCut}}}</p>
         </div>
         <div class="product__actions">
           <button
             class="btn btn-edit"
             type="button"
-            data-name="{{{id_product}}}"
+            data-name="{{{dataValues.id_product}}}"
             data-action="edit"
           >Editar</button>
           <button
             class="btn btn-delet"
             type="button"
-            data-name="{{{id_product}}}"
+            data-name="{{{dataValues.id_product}}}"
             data-action="delete"
           >Eliminar</button>
         </div>
 
-        <div>
-          <span>Puntuacion del Producto {{{rating}}}/5</span>
+        <div class="rating__result">
+          <span>Puntuacion del Producto {{{dataValues.rating}}}/5</span>
         </div>
 
       </div>

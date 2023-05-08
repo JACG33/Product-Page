@@ -1,28 +1,14 @@
-import { pool } from "../db/db.js";
+import { Product } from "../models/Product.model.js";
+import { getStarts } from "./stars.controller.js";
+import { Star } from "../models/Star.model.js";
 
 // Obtener todos los productos
-const starts = async (params) => {
-  const resulStarts = await pool.query(
-    "SELECT * FROM stars ORDER BY id_product ASC"
-  );
-  params.forEach((prod) => {
-    let tempStart = 0;
-    let countStart = 0;
-    resulStarts[0].forEach((start) => {
-      if (prod.id_product == start.id_product) {
-        tempStart += start.star_num;
-        countStart++;
-      }
-    });
-    let rating = tempStart / countStart;
-    prod.rating = rating ? Number(rating.toFixed(2)) : 0;
-  });
-};
 const getProducts = async (req, res) => {
   try {
-    const resul = await pool.query("SELECT * FROM products");
-    starts(resul[0]);
-    res.json(resul[0]);
+    await Product.sync();
+    const getProducts = await Product.findAll();
+    await getStarts(getProducts);
+    res.json(getProducts);
   } catch (error) {
     console.log(error);
   }
@@ -32,15 +18,19 @@ const getProducts = async (req, res) => {
 const getProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const resul = await pool.query(
-      "SELECT * FROM products WHERE id_product=?",
-      [id]
-    );
 
-    if (!resul[0].length)
+    await Product.sync();
+
+    const getProduct = await Product.findAll({
+      where: {
+        id_product: id,
+      },
+    });
+
+    if (!getProduct.length)
       return res.status(403).json({ message: "No se encontraron resultados" });
-    starts(resul[0]);
-    res.json(resul[0]);
+    await getStarts(getProduct);
+    res.json(getProduct);
   } catch (error) {
     console.log(error);
   }
@@ -50,19 +40,28 @@ const getProduct = async (req, res) => {
 const getUserProduct = async (req, res) => {
   try {
     const user = req.session.user;
-    const userProfile = await pool.query(
-      "SELECT user FROM users WHERE idUser=?",
-      [user]
-    );
-    const products = await pool.query("SELECT * FROM products WHERE idUser=?", [
-      user,
-    ]);
 
-    if (!products[0].length) {
-      return res.status(403).json({ message: "No se encontraron resultados" });
-    }
-    starts(products[0]);
-    res.json({ userProfile: userProfile[0], products: products[0] });
+    console.log("++++++++++++++++++++getting++++++++++++++++++++++")
+    console.log("getting")
+    await Product.sync();
+
+    const userProfile = await Product.findOne({
+      where: {
+        id_user: user,
+      },
+    });
+
+    const userProducts = await Product.findAll({
+      where: {
+        id_user: user,
+      },
+    });
+
+    //if (!userProducts[0].length) {
+    //return res.status(403).json({ message: "No se encontraron resultados" });
+    //}
+    await getStarts(userProducts);
+    res.json({ products: userProducts });
   } catch (error) {}
 };
 
@@ -71,10 +70,14 @@ const cretaeProduct = async (req, res) => {
   try {
     const { name, descrip } = req.body;
     const user = req.session.user;
-    const resul = await pool.query(
-      "INSERT INTO products(idUser,name,descrip) VALUES(?,?,?)",
-      [user, name, descrip]
-    );
+
+    await Product.sync();
+
+    const createProduct = await Product.create({
+      id_user: user,
+      name: name,
+      descrip: descrip,
+    });
     res.json({ message: "Producto añadido" });
   } catch (error) {
     console.log(error);
@@ -87,12 +90,16 @@ const updateProduct = async (req, res) => {
     const {
       body: { id, name, descrip },
     } = req;
-    console.log(id, name, descrip);
-    const resul = await pool.query(
-      "UPDATE products SET name=?, descrip=? WHERE id_product=?",
-      [name, descrip, id]
+
+    await Product.sync();
+
+    const resul = await Product.update(
+      { name: name, descrip: descrip },
+      { where: { id_product: id } }
     );
-    if (resul[0].affectedRows === 0)
+
+    console.log(resul);
+    if (!resul)
       return res.status(403).json({ message: "No se encontraron Datos" });
     res.json({ message: "Datos actualizados" });
   } catch (error) {
@@ -104,18 +111,27 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const resul = await pool.query("DELETE FROM products WHERE id_product=?", [
-      id,
-    ]);
 
-    const deleteStart = await pool.query(
-      "DELETE FROM stars WHERE id_product=?",
-      [id]
-    );
-    if (resul[0].affectedRows === 0)
+    await Product.sync();
+
+    await Star.sync();
+
+    const deleteResult = await Product.destroy({
+      where: {
+        id_product: id,
+      },
+    });
+
+    const deleteStart = await Star.destroy({
+      where: {
+        id_product: id,
+      },
+    });
+
+    if (deleteResult.affectedRows === 0)
       return res.status(403).json({ message: "No se encontraron Datos" });
+
     res.json({ message: "Datos elimiados" });
-    // res.json(resul[0]);
   } catch (error) {
     console.log(error);
   }

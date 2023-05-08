@@ -24,6 +24,7 @@ import { verifyToekn } from "./middlewares/verifyToken.js";
 import search from "./routes/searchProducts.routes.js";
 import { verifySearch } from "./middlewares/verifySearchParam.js";
 import userRoutes from "./routes/userProducts.routes.js";
+import {userBack} from "./routes/apiUser.routes.js";
 
 // Variables
 const app = express();
@@ -86,11 +87,12 @@ app.use("/login", loginView);
 app.use("/register", registerView);
 app.use("/api/products", apiRouter);
 app.use("/api/stars", starsRouter);
+app.use("/api/users",userBack)
 app.use("/products", routerProducts);
 app.use("/search", search);
 app.use("/user", verifyToekn, userRoutes);
 app.get("/", (req, res) => {
-  res.render("./home.hbs", { title: "Home" });
+  res.render("./home.hbs", { title: "Home", nav: true });
 });
 
 // Public

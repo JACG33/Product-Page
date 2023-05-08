@@ -1,26 +1,27 @@
 <nav class="navbar">
   <h1><a href="/" class="no-link">WEB</a></h1>
-  <div class="wrapper__search">
+  <div class="wrapper__search" id="wrapperSearch">
     <input class="input__search" type="search" name="" id="searchInput" />
-    <button class="btn__search" type="button" data-btn="search">Buscar</button>
+    <button class="btn__search" type="button" data-btn="search">
+      <i data-btn="search" class="fa-solid fa-magnifying-glass"></i>
+    </button>
+    <div class="search__result__cont" id="searchResultCont"></div>
   </div>
-  <ul class="navbar__items">
+  <button class="btn__hamburger" data-btn="hamburger"><i class="fa-solid fa-bars" data-btn="hamburger"></i></button>
+  <div class="navbar__items" id="navbarItems">
     {{#if loged}}
-      <li><a href="/user" class="btn btn__1">Perfil</a></li>
+      <a href="/user" class="btn btn__1 navbar__item">Perfil</a>
     {{/if}}
-    <li><a href="/products" class="btn btn__1">Productos</a></li>
+    <a href="/products" class="btn btn__1 navbar__item">Productos</a>
     {{#if loged}}
-      <li class="navbar__item"><a
-          href="/auth/logut"
-          class="btn btn__logout"
-        >Cerrar Sesion</a></li>
+      <a href="/auth/logut" class="btn btn__logout navbar__item">Cerrar Sesion</a>
     {{/if}}
 
     {{#unless loged}}
-      <li><a href="/login" class="btn btn__send">Login</a></li>
-      <li><a href="/register" class="btn btn__border">Registrate</a></li>
+      <a href="/login" class="btn btn__send navbar__item">Login</a>
+      <a href="/register" class="btn btn__border navbar__item">Registrate</a>
     {{/unless}}
 
-  </ul>
+  </div>
 
 </nav>

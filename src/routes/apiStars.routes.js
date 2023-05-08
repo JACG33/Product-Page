@@ -1,30 +1,33 @@
 import { Router } from "express";
-import { pool } from "../db/db.js";
+import { Star } from "../models/Star.model.js";
 
 const starsRouter = Router();
 
 starsRouter.get("/", async (req, res) => {
   try {
-    const resul = await pool.query(
-      "SELECT * FROM stars ORDER BY id_product ASC"
-    );
+    await Star.sync();
 
-    res.json({ message: resul[0] });
+    const getStars = await Star.findAll();
+
+    res.json({ message: getStars });
   } catch (error) {}
 });
 
 starsRouter.post("/", async (req, res) => {
-  console.log(req.body);
-
   try {
     const {
       body: { data, id },
     } = req;
+
     const user = req.session.user;
-    const sol = await pool.query(
-      "INSERT INTO stars (id_product,star_num) VALUES(?,?)",
-      [id, data]
-    );
+
+    await Star.sync();
+
+    const create = await Star.create({
+      id_product: id,
+      id_user: user,
+      star_number: data,
+    });
 
     res.json({ message: "Stars Create" });
   } catch (error) {

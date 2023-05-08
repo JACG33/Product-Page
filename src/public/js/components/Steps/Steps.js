@@ -19,7 +19,7 @@ export function addProduct(step) {
  * @returns Devuelbe la Card
  */
 export function editProduct(params) {
-  let { step, name, descrip,token } = params;
+  let { step, name, descrip, token } = params;
   let str = ` 
   <label class="card__label" for="nombre">Nombre del Producto</label>
   <input id="nombre" class="card__input" type="text" value="${name}" placeholder="Producto" required pattern="^[A-Za-zÑñ\s]+$">
@@ -27,4 +27,20 @@ export function editProduct(params) {
   <textarea id="descripcion" class="card__textarea" cols="30" rows="10" placeholder="Descripcion" required data-pattern="^.{15,140}$">${descrip}</textarea>
   `;
   return CardBuilder({ str, step, token });
+}
+
+/**
+  * Funcion para editar el perfil del usuario
+  * @param {object} params Objectos con los datos para crear la card.
+  * @return Devuelbe la Card.
+  */
+export function editProfile(params) {
+  let { step, name, descrip } = params,
+    str = `
+      <label class="card__label" for="nombre">Nombre</label>
+      <input id="nombre" class="card__input" type="text" value="${name}" placeholder="Producto" required pattern="^[A-Za-zÑñ\s]+$">
+      <label class="card__label" for="descripcion">Descripción Personal</label>
+      <textarea id="descripcion" class="card__textarea" cols="30" rows="10" placeholder="Descripcion" required data-pattern="^.{15,140}$">${descrip}</textarea>
+    `;
+    return CardBuilder({ str, step });
 }

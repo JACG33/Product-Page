@@ -3,7 +3,7 @@ export const actionEdit = async (params) => {
     method: "PATCH",
     headers: { "Content-type": "application/json" },
     body: JSON.stringify({
-      id: parseInt(params.token),
+      id: params.token,
       name: params.name,
       descrip: params.descrip,
     }),

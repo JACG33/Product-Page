@@ -1,16 +1,16 @@
 <section class="container products" id="sectionUser">
-  
+
   {{#each resulProducts}}
 
     <div class="product__item">
       <div class="product__info">
-        <span class="product__name">{{{name}}}</span>
-        <p class="product__descrip">{{{descrip}}}</p>
+        <span class="product__name">{{{dataValues.name}}}</span>
+        <p class="product__descrip">{{{dataValues.descrip}}}</p>
       </div>
       <div
         class="stars"
         id="starsContainer{{{@index}}}"
-        data-post="{{{id_product}}}"
+        data-post="{{{dataValues.id_product}}}"
         data-starsstatus="false"
       >
         <button type="button" class="star__btn"><img
@@ -38,7 +38,7 @@
             src="/img/svgIcons/starNone.svg"
             data-star="star"
             data-starcount="4"
-           data-starstatus="false"
+            data-starstatus="false"
             alt=""
           /></button>
         <button type="button" class="star__btn"><img
@@ -49,8 +49,8 @@
             alt=""
           /></button>
       </div>
-      <div>
-        <span>Puntuacion del Producto {{{rating}}}/5</span>
+      <div class="rating__result">
+        <span>Puntuacion del Producto {{{dataValues.rating}}}/5</span>
       </div>
     </div>
   {{/each}}

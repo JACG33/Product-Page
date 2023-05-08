@@ -18,6 +18,7 @@ export function CardBuilder(props) {
   const $cardSpan = d.createElement("span");
   props.step == "añadir" ? ($cardSpan.innerText = "Añadir Producto") : "";
   props.step == "editar" ? ($cardSpan.innerText = "Editar Producto") : "";
+  props.step == "editarPerfil" ? ($cardSpan.innerText = "Editar Perfil"): "";
 
   const $cardDivData = d.createElement("div");
   $cardDivData.className = "card__data";
@@ -43,7 +44,7 @@ export function CardBuilder(props) {
   
   $cardDivData.insertAdjacentHTML("afterbegin", props.str);
   
-  if (props.step === "añadir" || props.step === "editar") {
+  if (props.step === "añadir" || props.step === "editar" || props.step=== "editarPerfil") {
     $cardDivInputs.className = "card__btn flex-jus-btw";
     $cardInputPrev.setAttribute("data-close", 'cerrar');
     $cardInputReg.setAttribute("data-next", `${props.step}Send`);

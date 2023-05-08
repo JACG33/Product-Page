@@ -1,21 +1,32 @@
 import bcry from "bcryptjs";
 import { nanoid } from "nanoid";
 import jwt from "jsonwebtoken";
-import { pool } from "../db/db.js";
+import { User } from "../models/User.model.js";
 
 const login = async (req, res) => {
   try {
     const {
       body: { user, password },
     } = req;
-    const query = await pool.query("SELECT * FROM users WHERE user=?", [user]);
-    if (!query)
+    await User.sync();
+
+    const getUser = await User.findOne({ where: { user: user } });
+    if (!getUser) {
+      console.log("error");
       return res.status(401).json({ message: "Usuario no encontrado" });
-    let passHash = await bcry.compare(password, query[0][0].pass);
+    }
+
+    let passCompare = getUser["dataValues"].pass;
+    let passHash = await bcry.compare(password, passCompare);
+
     if (!passHash)
       return res.status(401).json({ message: "Constraseña Incorrecta" });
-    let token = jwt.sign({ jwToken: query[0][0].idUser }, "topScret");
-    let idUser = query[0][0].idUser;
+
+    let token = jwt.sign(
+      { jwToken: getUser["dataValues"].id_user },
+      "topScret"
+    );
+    let idUser = getUser["dataValues"].id_user;
     req.session.token = token;
     req.session.user = idUser;
     res.json({ message: "Logeado" });
@@ -31,11 +42,17 @@ const register = async (req, res) => {
     } = req;
     let idUser = nanoid(10);
     let passHash = await bcry.hash(password, 8);
-    const query = await pool.query(
-      "INSERT INTO users(idUser,user,nombreApellido,pass) VALUES(?,?,?,?)",
-      [idUser, user, fullname, passHash]
-    );
-    if (!query) return res.status(403).json({ message: "Erro en los datos" });
+
+    await User.sync();
+    const createUser = await User.create({
+      id_user: idUser,
+      user: user,
+      nombreApellido: fullname,
+      pass: passHash,
+    });
+
+    if (!createUser)
+      return res.status(403).json({ message: "Erro en los datos" });
     res.status(203).json({ message: "Usuario registrado" });
   } catch (error) {
     console.log(error);
